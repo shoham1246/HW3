@@ -21,7 +21,7 @@ Stack stack_create(int max_size); //complete alone??
 int stack_destroy(Stack stack);
 int stack_push(Stack stack, void * elem_t);
 void stack_pop(Stack stack);
-void * stack_peek(Stack stack);
+void * stack_peek(Stack stack); //need to change for elem_t?
 
 int stack_size(Stack stack);
 bool stack_is_empty(Stack stack);
