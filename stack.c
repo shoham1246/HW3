@@ -65,6 +65,7 @@ int stack_destroy(Stack stack) {
 	return 1;
 }
 
+<<<<<<< HEAD
 int stack_push(Stack stack, elem_t* elem) {
 	if (stack==NULL) {
 		return 0;
@@ -79,18 +80,36 @@ int stack_push(Stack stack, elem_t* elem) {
 	stack->head_elem = &(stack->elements[stack->num_of_elements]);
 	//head elem poins to the last element in the array
 	stack->num_of_elements++;
+=======
+int stack_push(Stack stack, void * elem_t) {
+	if (stack==NULL) {
+		return 0;
+	}
+	elem_t added_elem = clone_t(elem_t); //need to check success??
+	stack->elements[stack->num_of_elements] = added_elem;
+	stack->num_of_elements++;
+	stack->head_elem = added_elem;
+>>>>>>> ee655a294723732a823ba93ab688a713c7609609
 	return 1;
 }
 
 void stack_pop(Stack stack) {
+<<<<<<< HEAD
 	elem_t* deleted_elem = stack->head_elem;
+=======
+	deleted_elem = stack->head_elem;
+>>>>>>> ee655a294723732a823ba93ab688a713c7609609
 	stack->elements[stack->num_of_elements] = 0; //set to 0? what to do?
 	stack->num_of_elements--;
 	stack->head_elem = stack->elements[stack->num_of_elements] ;
 	destroy_t(deleted_elem);
 }
 
+<<<<<<< HEAD
 elem_t * stack_peek(Stack stack) {
+=======
+void * stack_peek(Stack stack) {
+>>>>>>> ee655a294723732a823ba93ab688a713c7609609
 	elem_t head_elem = stack->head_elem;
 	return head_elem; //if fail - head_elem==NULL - it returns NULL
 }
