@@ -26,17 +26,18 @@
 typedef void (*print_t)(elem_t e); //function that gets element pointer and print.
 
 
-Stack stack_create(int max_size) {
+Stack stack_create(int max_size, clone_t clone, destroy_t destroy, print_t print){
     Stack result = malloc(sizeof(struct stack));
 	if (result==NULL) {
 		return NULL;
 	}
-	//need fields?
-
 	//initialize fields
 	result->max_size = max_size;
 	result->num_of_elements = 0;
 	result->head_elem = NULL;
+	result->clone = clone;
+	result->destroy = destroy;
+	result->print = print;
 	result->elements = malloc(sizeof(elem_t) * max_size); 
 
 	/*
@@ -44,6 +45,8 @@ Stack stack_create(int max_size) {
 		-we have an array of elements[max_size]
 		-the start of the array is the bottom of the stack
 	*/
+	
+	//question - need to insert 0 to all array? for stack_pop..
 
 	if (result->elements == NULL) {
         free(result);
@@ -54,6 +57,43 @@ Stack stack_create(int max_size) {
 	return result;
 }
 
+int stack_destroy(Stack stack) {
+	if (stack==NULL) {
+		return 0;
+	}
+	free(stack);
+	return 1;
+}
+
+int stack_push(Stack stack, elem_t* elem) {
+	if (stack==NULL) {
+		return 0;
+	}
+	elem_t added_elem = (stack->clone)(elem); //need to check success??
+	if(added_elem == NULL) {
+        return FAIL; // Cloning failed
+    }
+
+	stack->elements[stack->num_of_elements] = added_elem;
+
+	stack->head_elem = &(stack->elements[stack->num_of_elements]);
+	//head elem poins to the last element in the array
+	stack->num_of_elements++;
+	return 1;
+}
+
+void stack_pop(Stack stack) {
+	elem_t* deleted_elem = stack->head_elem;
+	stack->elements[stack->num_of_elements] = 0; //set to 0? what to do?
+	stack->num_of_elements--;
+	stack->head_elem = stack->elements[stack->num_of_elements] ;
+	destroy_t(deleted_elem);
+}
+
+elem_t * stack_peek(Stack stack) {
+	elem_t head_elem = stack->head_elem;
+	return head_elem; //if fail - head_elem==NULL - it returns NULL
+}
 
 int stack_size(Stack stack){
 	int stack_size = stack->num_of_elements;
