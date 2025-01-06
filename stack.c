@@ -21,9 +21,11 @@
  * @return Non-zero value in case of an error
  */
 
-
+//probably not needed cause declared in header: typedef void * elem_t;
 //USER FUNCTIONS
 typedef void (*print_t)(elem_t e); //function that gets element pointer and print.
+typedef void (*destroy_t)(elem_t e); //func that removes element
+typedef elem_t (*clone_t)(elem_t e); //func that duplicates element
 
 
 Stack stack_create(int max_size, clone_t clone, destroy_t destroy, print_t print){
@@ -38,22 +40,18 @@ Stack stack_create(int max_size, clone_t clone, destroy_t destroy, print_t print
 	result->clone = clone;
 	result->destroy = destroy;
 	result->print = print;
-	result->elements = malloc(sizeof(elem_t) * max_size); 
-
+	result->elements = malloc(sizeof(elem_t) * max_size);
 	/*
 		Stack strucure:
 		-we have an array of elements[max_size]
 		-the start of the array is the bottom of the stack
 	*/
-	
 	//question - need to insert 0 to all array? for stack_pop..
 
 	if (result->elements == NULL) {
         free(result);
         return NULL;
     }
-
-
 	return result;
 }
 
@@ -74,12 +72,12 @@ int stack_push(Stack stack, elem_t* elem) {
 	if(added_elem == NULL) {
         return FAIL; // Cloning failed
     }
-
 	stack->elements[stack->num_of_elements] = added_elem;
 
 	stack->head_elem = &(stack->elements[stack->num_of_elements]);
-	//head elem poins to the last element in the array
+	//head elem points to the last element in the array
 	stack->num_of_elements++;
+}
 =======
 int stack_push(Stack stack, void * elem_t) {
 	if (stack==NULL) {
@@ -97,20 +95,19 @@ void stack_pop(Stack stack) {
 <<<<<<< HEAD
 	elem_t* deleted_elem = stack->head_elem;
 =======
-	deleted_elem = stack->head_elem;
 >>>>>>> ee655a294723732a823ba93ab688a713c7609609
 	stack->elements[stack->num_of_elements] = 0; //set to 0? what to do?
 	stack->num_of_elements--;
 	stack->head_elem = stack->elements[stack->num_of_elements] ;
-	destroy_t(deleted_elem);
+	(stack->destroy)(deleted_elem);
 }
 
 <<<<<<< HEAD
 elem_t * stack_peek(Stack stack) {
 =======
-void * stack_peek(Stack stack) {
+//void * stack_peek(Stack stack) {
 >>>>>>> ee655a294723732a823ba93ab688a713c7609609
-	elem_t head_elem = stack->head_elem;
+	elem_t* head_elem = stack->head_elem;
 	return head_elem; //if fail - head_elem==NULL - it returns NULL
 }
 
