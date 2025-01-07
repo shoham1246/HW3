@@ -1,21 +1,22 @@
 CC=gcc
-CLINK=$(CC)
+CCLINK= gcc -o
 CFLAGS=-g -Wall -std=c99
 OBJS=main.o stack.o student.o
-EXEC=prog.exe
-//define RM?
+EXEC= prog.exe
+RM=rm -rf *.o *.exe
 
-//default rule
-prog.exe: $(OBJS)
-	$(CCLINK) $(OBJS) -o prog.exe
+$(EXEC): $(OBJS)
+	$(CCLINK) $(EXEC) $(OBJS)
 	
-//other rules
-main.o: main.c stack.h student.h
 
-stack.o: stack.c stack.h
+stack.o: stack.c stack.h common.h
+	$(CC) $(CFLAGS) -c stack.c
 
-student.o: student.c student.h
+student.o: student.c student.h common.h
+	$(CC) $(CFLAGS) -c student.c
 
-//clean rule
+main.o: main.c student.h stack.h common.h
+	$(CC) $(CFLAGS) -c main.c
+
 clean:
-	rm -rf *.o *.exe
+	$(RM)

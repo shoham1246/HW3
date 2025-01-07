@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "student.h"
+#include "common.h"
 
 /**
  * @brief Application's main entry point
@@ -23,60 +24,59 @@
  */
 
 
+
 //USER FUNCTIONS
-Student* student_clone(const Student* student){
+void* student_clone(const void* student){
 
 
-	Student* student_copy = (Student*)malloc(sizeof(Student));
+	Student student_copy = (Student)malloc(sizeof(student)); //casting to known type student
 
 
 	if(student_copy == NULL){
 		return NULL;
 	}
 
-	student_copy->name = (char*)malloc(strlen(student->name) + 1); // +1 for \0
+	Student temp = (Student)student;
+	student_copy->name = (char*)malloc(strlen(temp->name) + 1); // +1 for \0
     if (student_copy->name == NULL) {
         free(student_copy); 
         return NULL;
     }
 
-	strcpy(student_copy->name, student->name);
-	student_copy->age = student->age;
-	student_copy->id = student->id;
+	strcpy(student_copy->name, temp->name);
+	student_copy->age = temp->age;
+	student_copy->id = temp->id;
 
-	return student_copy;
+	return (void *)student_copy; //reversed casting
 
 }
 
 
-void student_destroy(Student* student){
-
-	free(student->name); //because it was allocated seperately
-	free(student);
+void student_destroy(void* student){
+	if(student== NULL){
+		return;
+	}
+	Student temp = (Student)student;
+	free(temp->name); //because it was allocated seperately
+	free(temp);
 }
 
 
-void student_print(Student* student){
+void student_print(void* student){
 
 	printf("student name: ");
 
+	Student temp = (Student)student;
+	int i=0;
+	while(*(temp->name +i)!='\0'){
 
-	i=0;
-	while(*(student->name +i)!='\0'){
-
-		printf("%c",*(student->name +i));
+		printf("%c",*(temp->name +i));
 		i++;
 	}
 
-	printf(", age: %d, id: %d\n", student->age, student->id);
+	printf(", age: %d, id: %d\n", temp->age, temp->id);
 
 
 }
 
 
-
-int main(int argc, char **argv) {
-
-	printf("Hello World\n");
-	return 0;
-}
